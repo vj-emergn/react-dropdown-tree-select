@@ -45,7 +45,7 @@ test.skip('renders tree nodes when search mode is on', t => {
   t.snapshot(toJson(wrapper))
 })
 
-test.skip('renders only expanded tree nodes when search mode is off', t => {
+test('renders only expanded tree nodes when search mode is off', t => {
   const tree = [
     {
       label: 'item1',
