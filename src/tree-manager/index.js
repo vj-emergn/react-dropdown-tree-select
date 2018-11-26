@@ -54,30 +54,33 @@ class TreeManager {
     return matches
   }
 
-  setChildMatchStatus(id) {
+  addParentsToTree(id, tree) {
     if (id !== undefined) {
       const node = this.getNodeById(id)
+      this.addParentsToTree(node._parent, tree)
+      node.hide = true
       node.matchInChildren = true
-      this.setChildMatchStatus(node._parent)
+      tree.set(id, node)
     }
   }
 
-  filterTree(searchTerm) {
+  filterTree(searchTerm, keepTreeOnSearch) {
     const matches = this.getMatches(searchTerm.toLowerCase())
 
-    this.tree.forEach(node => {
-      node.hide = true
-      node.matchInChildren = false
-    })
+    const matchTree = new Map()
 
     matches.forEach(m => {
       const node = this.getNodeById(m)
       node.hide = false
-      this.setChildMatchStatus(node._parent)
+      if (keepTreeOnSearch) {
+        // add parent nodes first or else the tree won't be rendered in correct hierarchy
+        this.addParentsToTree(node._parent, matchTree)
+      }
+      matchTree.set(m, node)
     })
 
     const allNodesHidden = matches.length === 0
-    return { allNodesHidden, tree: this.tree }
+    return { allNodesHidden, tree: matchTree }
   }
 
   restoreNodes() {
@@ -98,7 +101,11 @@ class TreeManager {
 
   togglePreviousChecked(id) {
     const prevChecked = this.currentChecked
-    if (prevChecked) this.getNodeById(prevChecked).checked = false
+
+    // if id is same as previously selected node, then do nothing (since it's state is already set correctly by setNodeCheckedState)
+    // but if they ar not same, then toggle the previous one
+    if (prevChecked && prevChecked !== id) this.getNodeById(prevChecked).checked = false
+
     this.currentChecked = id
   }
 

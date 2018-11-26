@@ -30,9 +30,18 @@ class DropdownTreeSelect extends Component {
     onChange: PropTypes.func,
     onAction: PropTypes.func,
     onNodeToggle: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     simpleSelect: PropTypes.bool,
     noMatchesText: PropTypes.string,
-    showPartiallySelected: PropTypes.bool
+    showPartiallySelected: PropTypes.bool,
+    disabled: PropTypes.bool
+  }
+
+  static defaultProps = {
+    onFocus: () => {},
+    onBlur: () => {},
+    onChange: () => {}
   }
 
   constructor(props) {
@@ -41,10 +50,6 @@ class DropdownTreeSelect extends Component {
       showDropdown: this.props.showDropdown || false,
       searchModeOn: false
     }
-  }
-
-  notifyChange = (...args) => {
-    typeof this.props.onChange === 'function' && this.props.onChange(...args)
   }
 
   createList = (tree, simple, showPartial) => {
@@ -68,18 +73,20 @@ class DropdownTreeSelect extends Component {
     this.setState({ tree, tags })
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick, false)
+  }
+
   componentWillReceiveProps(nextProps) {
     const tree = this.createList(nextProps.data, nextProps.simpleSelect, nextProps.showPartiallySelected)
     const tags = this.treeManager.getTags()
     this.setState({ tree, tags })
   }
 
-  handleClick = e => {
+  handleClick = () => {
     this.setState(prevState => {
       // keep dropdown active when typing in search box
       const showDropdown = this.keepDropdownActive || !prevState.showDropdown
-
-      console.log('hc', document.activeElement, e, isOutsideClick(e), prevState.showDropdown)
 
       // register event listeners only if there is a state change
       if (showDropdown !== prevState.showDropdown) {
@@ -90,15 +97,15 @@ class DropdownTreeSelect extends Component {
         }
       }
 
+      if (showDropdown) this.props.onFocus()
+      else this.props.onBlur()
+
       return !showDropdown ? { showDropdown, ...this.resetSearchState() } : { showDropdown }
     })
   }
 
   handleOutsideClick = e => {
-    console.log('hoc', this.node, e.target, this.node.contains(e.target), isOutsideClick(e))
-
-    // if (this.node.contains(e.target)) {
-    if (!isOutsideClick(e)) {
+    if (!isOutsideClick(e, this.props.className)) {
       return
     }
 
@@ -106,7 +113,7 @@ class DropdownTreeSelect extends Component {
   }
 
   onInputChange = value => {
-    const { allNodesHidden, tree } = this.treeManager.filterTree(value)
+    const { allNodesHidden, tree } = this.treeManager.filterTree(value, this.props.keepTreeOnSearch)
     const searchModeOn = value.length > 0
 
     this.setState({
@@ -115,8 +122,6 @@ class DropdownTreeSelect extends Component {
       allNodesHidden
     })
   }
-
-  // isOutSideClick = e =>
 
   onTagRemove = id => {
     this.onCheckboxChange(id, false)
@@ -153,7 +158,7 @@ class DropdownTreeSelect extends Component {
     }
 
     this.setState(nextState)
-    this.notifyChange(this.treeManager.getNodeById(id), tags)
+    this.props.onChange(this.treeManager.getNodeById(id), tags)
   }
 
   onAction = (actionId, nodeId) => {
@@ -172,6 +177,7 @@ class DropdownTreeSelect extends Component {
     const dropdownTriggerClassname = cx({
       'dropdown-trigger': true,
       arrow: true,
+      disabled: this.props.disabled,
       top: this.state.showDropdown,
       bottom: !this.state.showDropdown
     })
@@ -184,7 +190,7 @@ class DropdownTreeSelect extends Component {
         }}
       >
         <div className="dropdown">
-          <a className={dropdownTriggerClassname} onClick={this.handleClick}>
+          <a className={dropdownTriggerClassname} onClick={!this.props.disabled && this.handleClick}>
             <Input
               inputRef={el => {
                 this.searchInput = el
@@ -195,6 +201,7 @@ class DropdownTreeSelect extends Component {
               onFocus={this.onInputFocus}
               onBlur={this.onInputBlur}
               onTagRemove={this.onTagRemove}
+              disabled={this.props.disabled}
             />
           </a>
           {this.state.showDropdown && (

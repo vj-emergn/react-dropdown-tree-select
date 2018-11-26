@@ -52,7 +52,7 @@ class Tree extends Component {
 
   computeInstanceProps = props => {
     this.allVisibleNodes = this.getNodes(props)
-    this.totalPages = this.allVisibleNodes.length / this.props.pageSize
+    this.totalPages = Math.ceil(this.allVisibleNodes.length / this.props.pageSize)
     this.currentPage = 1
   }
 
@@ -83,7 +83,7 @@ class Tree extends Component {
 
   loadMore = () => {
     this.currentPage = this.currentPage + 1
-    const nextItems = this.allVisibleNodes.slice(0, this.currentPage + this.props.pageSize)
+    const nextItems = this.allVisibleNodes.slice(0, this.currentPage * this.props.pageSize)
     this.setState({ items: nextItems })
   }
 

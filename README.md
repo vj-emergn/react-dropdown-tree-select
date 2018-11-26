@@ -4,7 +4,7 @@
 
 [![NPM version][npm-image]][npm-url] [![gzip][gzip-image]][gzip-url] [![npm download][download-image]][npm-url]
 
-[![build status][travis-image]][travis-url] [![Test coverage][coveralls-image]][coveralls-url] [![semantic-release][semantic-release]][semantic-release-url] [![Commitizen friendly][commitizen]][commitizen-url] [![Greenkeeper badge][greenkeeper]][greenkeeper-url]
+[![build status][travis-image]][travis-url] [![Test coverage][coveralls-image]][coveralls-url] [![Commitizen friendly][commitizen]][commitizen-url] [![semantic-release][semantic-release]][semantic-release-url] [![All Contributors](https://img.shields.io/badge/all_contributors-20-orange.svg?style=flat-square)](#contributors)
 
 [npm-image]: http://img.shields.io/npm/v/react-dropdown-tree-select.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/react-dropdown-tree-select
@@ -12,15 +12,13 @@
 [travis-url]: https://travis-ci.org/dowjones/react-dropdown-tree-select
 [coveralls-image]: https://img.shields.io/coveralls/dowjones/react-dropdown-tree-select.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/dowjones/react-dropdown-tree-select?branch=master
-[download-image]: https://img.shields.io/npm/dm/react-dropdown-tree-select.svg?style=flat-square
-[semantic-release]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square
-[semantic-release-url]: https://github.com/semantic-release/semantic-release
+[download-image]: https://img.shields.io/npm/dt/react-dropdown-tree-select.svg?style=flat-square
 [commitizen]: https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square
 [commitizen-url]: http://commitizen.github.io/cz-cli/
-[greenkeeper]: https://badges.greenkeeper.io/dowjones/react-dropdown-tree-select.svg?style=flat-square
-[greenkeeper-url]: https://greenkeeper.io/
 [gzip-image]: http://img.badgesize.io/https://unpkg.com/react-dropdown-tree-select/dist/react-dropdown-tree-select.js?compression=gzip&style=flat-square
 [gzip-url]: https://unpkg.com/react-dropdown-tree-select/dist/react-dropdown-tree-select.js
+[semantic-release]: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square
+[semantic-release-url]: https://github.com/semantic-release/semantic-release
 
 ## React Dropdown Tree Select
 
@@ -28,40 +26,41 @@ A lightweight and fast control to render a select component that can display hie
 
 ## Table of Contents
 
-* [Screenshot](#screenshot)
-* [Demo](#example)
-  * [Vanilla (no framework)](#vanilla-no-framework)
-  * [With Bootstrap](#with-bootstrap)
-  * [With Material Design](#with-material-design)
-  * [As Single Select](#as-single-select)
-* [Install](#install)
-  * [As NPM package](#as-npm-package)
-  * [Using a CDN](#using-a-cdn)
-  * [Peer Dependencies](#peer-dependencies)
-* [Usage](#usage)
-* [Props](#props)
-  * [className](#classname)
-  * [clearSearchOnChange](#clearsearchonchange)
-  * [onChange](#onchange)
-  * [onNodeToggle](#onnodetoggle)
-  * [data](#data)
-  * [placeholderText](#placeholdertext)
-  * [noMatchesText](#nomatchestext)
-  * [keepTreeOnSearch](#keeptreeonsearch)
-  * [simpleSelect](#simpleselect)
-  * [showPartiallySelected](#showpartiallyselected)
-* [Styling and Customization](#styling-and-customization)
-  * [Using default styles](#default-styles)
-  * [Customizing with Bootstrap, Material Design styles](#customizing-styles)
-* [Performance](#performance)
-  * [Search optimizations](#search-optimizations)
-  * [Search debouncing](#search-debouncing)
-  * [Virtualized rendering](#virtualized-rendering)
-  * [Reducing costly DOM manipulations](#reducing-costly-dom-manipulations)
-* [FAQ](#faq)
-* [Doing more with HOCs](/docs/HOC.md)
-* [Development](#development)
-* [License](#license)
+- [Screenshot](#screenshot)
+- [Demo](#example)
+  - [Vanilla (no framework)](#vanilla-no-framework)
+  - [With Bootstrap](#with-bootstrap)
+  - [With Material Design](#with-material-design)
+  - [As Single Select](#as-single-select)
+- [Install](#install)
+  - [As NPM package](#as-npm-package)
+  - [Using a CDN](#using-a-cdn)
+  - [Peer Dependencies](#peer-dependencies)
+- [Usage](#usage)
+- [Props](#props)
+  - [className](#classname)
+  - [clearSearchOnChange](#clearsearchonchange)
+  - [onChange](#onchange)
+  - [onNodeToggle](#onnodetoggle)
+  - [data](#data)
+  - [placeholderText](#placeholdertext)
+  - [noMatchesText](#nomatchestext)
+  - [keepTreeOnSearch](#keeptreeonsearch)
+  - [simpleSelect](#simpleselect)
+  - [showPartiallySelected](#showpartiallyselected)
+  - [showDropdown](#showDropdown)
+- [Styling and Customization](#styling-and-customization)
+  - [Using default styles](#default-styles)
+  - [Customizing with Bootstrap, Material Design styles](#customizing-styles)
+- [Performance](#performance)
+  - [Search optimizations](#search-optimizations)
+  - [Search debouncing](#search-debouncing)
+  - [Virtualized rendering](#virtualized-rendering)
+  - [Reducing costly DOM manipulations](#reducing-costly-dom-manipulations)
+- [FAQ](#faq)
+- [Doing more with HOCs](/docs/HOC.md)
+- [Development](#development)
+- [License](#license)
 
 ## Screenshot
 
@@ -178,8 +177,8 @@ Type: `function`
 
 Fires when a node change event occurs. Currently the following actions trigger a node change:
 
-* Checkbox click which checks/unchecks the item
-* Closing of pill (which unchecks the corresponding checkbox item)
+- Checkbox click which checks/unchecks the item
+- Closing of pill (which unchecks the corresponding checkbox item)
 
 Calls the handler with the current node object and all selected nodes (if any). Example:
 
@@ -207,6 +206,18 @@ function onNodeToggle(currentNode) {
 
 return <DropdownTreeSelect data={data} onNodeToggle={onNodeToggle} />
 ```
+
+### onFocus
+
+Type: `function`
+
+Fires when input box receives focus or the dropdown arrow is clicked. This is helpful for setting `dirty` or `touched` flags with forms.
+
+### onBlur
+
+Type: `function`
+
+Fires when input box loses focus or the dropdown arrow is clicked again (and the dropdown collapses). This is helpful for setting `dirty` or `touched` flags with forms.
 
 ### data
 
@@ -275,6 +286,12 @@ Type: `bool` (default: `false`)
 
 If set to true, shows checkboxes in a partial state when one, but not all of their children are selected. Allows styling of partially selected nodes as well, by using [:indeterminate](https://developer.mozilla.org/en-US/docs/Web/CSS/:indeterminate) pseudo class. Simply add desired styles to `.node.partial .checkbox-item:indeterminate { ... }` in your CSS.
 
+### showDropdown
+
+Type: `bool` (default: `false`)
+
+If set to true, shows the dropdown when rendered. This can be used to render the component with the dropdown open as its initial state.
+
 ## Styling and Customization
 
 ### Default styles
@@ -323,16 +340,16 @@ You can reference the files from `node_modules/react-dropdown-tree-select/dist/s
 
 Once you import default styles, it is easy to add/override the provided styles to match popular frameworks. Checkout `/docs` folder for some examples.
 
-* [With Bootstrap](/docs/examples/bootstrap)
-* [With Material Design ](/docs/examples/material)
+- [With Bootstrap](/docs/examples/bootstrap)
+- [With Material Design ](/docs/examples/material)
 
 ## Performance
 
 ### Search optimizations
 
-* The tree creates a flat list of nodes from hierarchical tree data to perform searches that are linear in time irrespective of the tree depth or size.
-* It also memoizes each search term, so subsequent searches are instantaneous (almost).
-* Last but not the least, the search employs progressive filtering technique where subsequent searches are performed on the previous search set. E.g., say the tree has 4000 nodes altogether and the user wants to filter nodes that contain the text: "2002". As the user enters each key press the search goes like this:
+- The tree creates a flat list of nodes from hierarchical tree data to perform searches that are linear in time irrespective of the tree depth or size.
+- It also memoizes each search term, so subsequent searches are instantaneous (almost).
+- Last but not the least, the search employs progressive filtering technique where subsequent searches are performed on the previous search set. E.g., say the tree has 4000 nodes altogether and the user wants to filter nodes that contain the text: "2002". As the user enters each key press the search goes like this:
 
 ```
 key press  : 2-----20-----200-----2002
@@ -350,7 +367,7 @@ The tree debounces key presses to avoid costly search calculations. The default 
 
 The dropdown renders only visible content and skips any nodes that are going to hidden from the user. E.g., if a parent node is not expanded, there is no point in rendering children since they will not be visible anyway.
 
-Planned feature: Use [react-virtualized](https://github.com/bvaughn/react-virtualized) to take this to the next level.
+~~Planned feature: Use [react-virtualized](https://github.com/bvaughn/react-virtualized) to take this to the next level.~~ The search tree now uses infinite scroll, limiting search results to 100 items initially (more load seamlessly as you scroll) - this results in super fast rendering even with large number of nodes (see [#80](https://github.com/dowjones/react-dropdown-tree-select/issues/80)).
 
 ### Reducing costly DOM manipulations
 
@@ -442,3 +459,17 @@ npm run test:cov  // test coverage
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
 Released 2017 by [Hrusikesh Panda](https://github.com/mrchief) @ [Dow Jones](https://github.com/dowjones)
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars0.githubusercontent.com/u/966550?v=4" width="100px;"/><br /><sub><b>toofff</b></sub>](http://www.yanoucrea.fr)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Atoofff "Bug reports") [💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=toofff "Code") [📖](https://github.com/dowjones/react-dropdown-tree-select/commits?author=toofff "Documentation") [🤔](#ideas-toofff "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/1257968?v=4" width="100px;"/><br /><sub><b>Grégory Copin</b></sub>](http://www.les-tilleuls.coop)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3AGregcop1 "Bug reports") [💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=Gregcop1 "Code") | [<img src="https://avatars1.githubusercontent.com/u/7589718?v=4" width="100px;"/><br /><sub><b>PRIYANSHU AGRAWAL</b></sub>](https://github.com/priyanshu92)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Apriyanshu92 "Bug reports") [💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=priyanshu92 "Code") [🤔](#ideas-priyanshu92 "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/425261?v=4" width="100px;"/><br /><sub><b>James Greenaway</b></sub>](http://james.greenaway.io)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Ajvgreenaway "Bug reports") [💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=jvgreenaway "Code") [🤔](#ideas-jvgreenaway "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/36223986?v=4" width="100px;"/><br /><sub><b>itrombitas</b></sub>](https://github.com/itrombitas)<br />[💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=itrombitas "Code") | [<img src="https://avatars2.githubusercontent.com/u/18341459?v=4" width="100px;"/><br /><sub><b>Dave Henton</b></sub>](https://github.com/davehenton)<br />[🚇](#infra-davehenton "Infrastructure (Hosting, Build-Tools, etc)") | [<img src="https://avatars3.githubusercontent.com/u/4869717?v=4" width="100px;"/><br /><sub><b>Swetha Kolli</b></sub>](https://github.com/nagaskolli)<br />[💻](https://github.com/dowjones/react-dropdown-tree-select/commits?author=nagaskolli "Code") |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="https://avatars1.githubusercontent.com/u/13344028?v=4" width="100px;"/><br /><sub><b>BaarishRain</b></sub>](https://github.com/BaarishRain)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3ABaarishRain "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/32507174?v=4" width="100px;"/><br /><sub><b>Kovacs Alexandru Robert</b></sub>](http://kovacsalexandrurobert.ro)<br />[🤔](#ideas-akovacspentalog "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/11201133?v=4" width="100px;"/><br /><sub><b>Alexis Mondragon</b></sub>](https://github.com/amondragon)<br />[🤔](#ideas-amondragon "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/13438795?v=4" width="100px;"/><br /><sub><b>Charlie91</b></sub>](https://github.com/Charlie91)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3ACharlie91 "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/1930681?v=4" width="100px;"/><br /><sub><b>Dhirendrasinh</b></sub>](https://github.com/dhirendrarathod2000)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Adhirendrarathod2000 "Bug reports") | [<img src="https://avatars1.githubusercontent.com/u/7006862?v=4" width="100px;"/><br /><sub><b>JKapostins</b></sub>](https://github.com/JKapostins)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3AJKapostins "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/24354568?v=4" width="100px;"/><br /><sub><b>josvegit</b></sub>](https://github.com/josvegit)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Ajosvegit "Bug reports") |
+| [<img src="https://avatars1.githubusercontent.com/u/12422912?v=4" width="100px;"/><br /><sub><b>Luis Locon</b></sub>](https://twitter.com/LoconLuis)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Aloconluis "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/10121255?v=4" width="100px;"/><br /><sub><b>Mikdat DOĞRU</b></sub>](https://github.com/mikdatdogru)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Amikdatdogru "Bug reports") | [<img src="https://avatars1.githubusercontent.com/u/7553535?v=4" width="100px;"/><br /><sub><b>Will Izard</b></sub>](https://github.com/will-izard)<br />[🤔](#ideas-will-izard "Ideas, Planning, & Feedback") | [<img src="https://avatars3.githubusercontent.com/u/4504265?v=4" width="100px;"/><br /><sub><b>Nikola Peric</b></sub>](https://gitlab.com/nikperic)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Anikolap "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/6119839?v=4" width="100px;"/><br /><sub><b>Ramón Alejandro Reyes Fajardo</b></sub>](https://github.com/ramonrf)<br />[🐛](https://github.com/dowjones/react-dropdown-tree-select/issues?q=author%3Aramonrf "Bug reports") | [<img src="https://avatars3.githubusercontent.com/u/10716099?v=4" width="100px;"/><br /><sub><b>Sarada Cherukupalli</b></sub>](https://github.com/sarada-Cheukupalli)<br />[🤔](#ideas-sarada-Cheukupalli "Ideas, Planning, & Feedback") |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
