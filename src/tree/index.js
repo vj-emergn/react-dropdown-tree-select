@@ -33,7 +33,7 @@ class Tree extends Component {
   }
 
   static defaultProps = {
-    pageSize: 100,
+    pageSize: 250,
   }
 
   constructor(props) {
